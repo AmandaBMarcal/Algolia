@@ -10,8 +10,19 @@ const searchClient = algoliasearch(
   '2b1a583cbcf4cc9b0f850cbc4f9b4b6f'
 );
 
+// Fetch and index objects in Algolia
+const processRecords = async () => {
+  const datasetRequest = await fetch('https://dashboard.algolia.com/sample_datasets/airports.json');
+  const airports = await datasetRequest.json();
+  return await client.saveObjects({ indexName: 'airports', objects: airports });
+};
+
+processRecords()
+  .then(() => console.log('Successfully indexed objects!'))
+  .catch((err) => console.error(err));
+
 const search = instantsearch({
-  indexName: 'airports_index',
+  indexName: 'airports',
   searchClient,
   future: { preserveSharedStateOnUnmount: true },
 });
